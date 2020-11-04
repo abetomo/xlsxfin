@@ -190,3 +190,121 @@ func TestPmt(t *testing.T) {
 		}
 	})
 }
+
+func TestIpmt(t *testing.T) {
+	type testArgs struct {
+		rate        float64
+		per         int
+		nper        int
+		pv          int
+		fv          int
+		paymentFlag bool
+	}
+
+	type testData struct {
+		args     testArgs
+		expected int
+	}
+
+	t.Run("nper is 0", func(t *testing.T) {
+		actual := Ipmt(0.3, 3, 0, 100_000, 0, false)
+		expected := 0
+		if actual != expected {
+			t.Fatalf("got: %d\nwant: %d\n", actual, expected)
+		}
+	})
+
+	t.Run("per is 0", func(t *testing.T) {
+		actual := Ipmt(0.3, 0, 36, 100_000, 0, false)
+		expected := 0
+		if actual != expected {
+			t.Fatalf("got: %d\nwant: %d\n", actual, expected)
+		}
+	})
+
+	t.Run("rate is 0", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.0, 24, 36, 100_000, 0, false},
+				expected: 0,
+			},
+			{
+				args:     testArgs{0.0, 24, 36, 100_000, 0, true},
+				expected: 0,
+			},
+			{
+				args:     testArgs{0.0, 24, 36, 100_000, 1_000, false},
+				expected: 0,
+			},
+			{
+				args:     testArgs{0.0, 24, 36, 100_000, 1_000, true},
+				expected: 0,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := Ipmt(
+				args.rate,
+				args.per,
+				args.nper,
+				args.pv,
+				args.fv,
+				args.paymentFlag,
+			)
+			if actual != testCase.expected {
+				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
+			}
+		}
+	})
+
+	t.Run("rate > 0", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.1, 2, 36, 800_000, 0, false},
+				expected: -79_733,
+			},
+			{
+				args:     testArgs{0.6, 2, 36, 800_000, 0, false},
+				expected: -480_000,
+			},
+			{
+				args:     testArgs{0.1, 2, 36, 800_000, 0, true},
+				expected: -72_484,
+			},
+			{
+				args:     testArgs{0.6, 2, 36, 800_000, 0, true},
+				expected: -300_000,
+			},
+			{
+				args:     testArgs{0.1, 2, 36, 800_000, 1_000, false},
+				expected: -79_732,
+			},
+			{
+				args:     testArgs{0.6, 2, 36, 800_000, 1_000, false},
+				expected: -480_000,
+			},
+			{
+				args:     testArgs{0.1, 2, 36, 800_000, 1_000, true},
+				expected: -72_484,
+			},
+			{
+				args:     testArgs{0.6, 2, 36, 800_000, 1_000, true},
+				expected: -300_000,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := Ipmt(
+				args.rate,
+				args.per,
+				args.nper,
+				args.pv,
+				args.fv,
+				args.paymentFlag,
+			)
+			if actual != testCase.expected {
+				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
+			}
+		}
+	})
+}
