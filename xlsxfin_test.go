@@ -427,6 +427,89 @@ func TestIpmt(t *testing.T) {
 	})
 }
 
+func TestFvFloat64(t *testing.T) {
+	type testArgs struct {
+		rate        float64
+		nper        int
+		pmt         int
+		pv          int
+		paymentFlag bool
+	}
+
+	type testData struct {
+		args     testArgs
+		expected float64
+	}
+
+	t.Run("rate is 0", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.0, 12, 10_000, 0, false},
+				expected: -120_000.0,
+			},
+			{
+				args:     testArgs{0.0, 12, 10_000, 1_000, false},
+				expected: -121_000.0,
+			},
+			{
+				args:     testArgs{0.0, 12, 10_000, 0, true},
+				expected: -120_000.0,
+			},
+			{
+				args:     testArgs{0.0, 12, 10_000, 1_000, true},
+				expected: -121_000.0,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := FvFloat64(
+				args.rate,
+				args.nper,
+				args.pmt,
+				args.pv,
+				args.paymentFlag,
+			)
+			if !checkForRoundingError(actual, testCase.expected) {
+				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
+			}
+		}
+	})
+
+	t.Run("rate > 0", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.1, 12, 10_000, 0, false},
+				expected: -213_842.837672,
+			},
+			{
+				args:     testArgs{0.1, 12, 10_000, 1_000, false},
+				expected: -216_981.266049,
+			},
+			{
+				args:     testArgs{0.1, 12, 10_000, 0, true},
+				expected: -235_227.121439,
+			},
+			{
+				args:     testArgs{0.1, 12, 10_000, 1_000, true},
+				expected: -238365.549816,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := FvFloat64(
+				args.rate,
+				args.nper,
+				args.pmt,
+				args.pv,
+				args.paymentFlag,
+			)
+			if !checkForRoundingError(actual, testCase.expected) {
+				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
+			}
+		}
+	})
+}
+
 func TestFv(t *testing.T) {
 	type testArgs struct {
 		rate        float64
