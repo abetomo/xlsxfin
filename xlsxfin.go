@@ -74,3 +74,12 @@ func Fv(rate float64, nper int, pmt int, pv int, paymentFlag bool) int {
 	}
 	return round(-(float64(pv)*term + (float64(pmt)*(term-1))/rate))
 }
+
+func Ppmt(rate float64, per int, nper int, pv int, fv int, paymentFlag bool) int {
+	if per < 1 || per >= nper+1 {
+		return 0
+	}
+	pmt := PmtFloat64(rate, nper, pv, fv, paymentFlag)
+	ipmt := IpmtFloat64(rate, per, nper, pv, fv, paymentFlag)
+	return round(pmt - ipmt)
+}
