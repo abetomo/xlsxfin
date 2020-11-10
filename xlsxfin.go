@@ -59,3 +59,14 @@ func Ipmt(rate float64, per int, nper int, pv int, fv int, paymentFlag bool) int
 	}
 	return round(ip / (1.0 + rate))
 }
+
+func Fv(rate float64, nper int, pmt int, pv int, paymentFlag bool) int {
+	if rate == 0 {
+		return -1 * (pv + pmt*nper)
+	}
+	term := math.Pow(1.0+rate, float64(nper))
+	if paymentFlag {
+		return round(-(float64(pv)*term + (float64(pmt)*(1+rate)*(term-1))/rate))
+	}
+	return round(-(float64(pv)*term + (float64(pmt)*(term-1))/rate))
+}

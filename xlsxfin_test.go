@@ -308,3 +308,86 @@ func TestIpmt(t *testing.T) {
 		}
 	})
 }
+
+func TestFv(t *testing.T) {
+	type testArgs struct {
+		rate        float64
+		nper        int
+		pmt         int
+		pv          int
+		paymentFlag bool
+	}
+
+	type testData struct {
+		args     testArgs
+		expected int
+	}
+
+	t.Run("rate is 0", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.0, 12, 10_000, 0, false},
+				expected: -120_000,
+			},
+			{
+				args:     testArgs{0.0, 12, 10_000, 1_000, false},
+				expected: -121_000,
+			},
+			{
+				args:     testArgs{0.0, 12, 10_000, 0, true},
+				expected: -120_000,
+			},
+			{
+				args:     testArgs{0.0, 12, 10_000, 1_000, true},
+				expected: -121_000,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := Fv(
+				args.rate,
+				args.nper,
+				args.pmt,
+				args.pv,
+				args.paymentFlag,
+			)
+			if actual != testCase.expected {
+				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
+			}
+		}
+	})
+
+	t.Run("rate > 0", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.1, 12, 10_000, 0, false},
+				expected: -213_843,
+			},
+			{
+				args:     testArgs{0.1, 12, 10_000, 1_000, false},
+				expected: -216_981,
+			},
+			{
+				args:     testArgs{0.1, 12, 10_000, 0, true},
+				expected: -235_227,
+			},
+			{
+				args:     testArgs{0.1, 12, 10_000, 1_000, true},
+				expected: -238_366,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := Fv(
+				args.rate,
+				args.nper,
+				args.pmt,
+				args.pv,
+				args.paymentFlag,
+			)
+			if actual != testCase.expected {
+				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
+			}
+		}
+	})
+}
