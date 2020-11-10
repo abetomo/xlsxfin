@@ -27,13 +27,13 @@ func Pmt(rate float64, nper int, pv int, fv int, paymentFlag bool) int {
 	return round(PmtFloat64(rate, nper, pv, fv, paymentFlag))
 }
 
-func Ipmt(rate float64, per int, nper int, pv int, fv int, paymentFlag bool) int {
+func IpmtFloat64(rate float64, per int, nper int, pv int, fv int, paymentFlag bool) float64 {
 	if nper == 0 {
-		return 0
+		return 0.0
 	}
 
 	if per == 0 {
-		return 0
+		return 0.0
 	}
 
 	pmt := PmtFloat64(rate, nper, pv, fv, false)
@@ -55,9 +55,13 @@ func Ipmt(rate float64, per int, nper int, pv int, fv int, paymentFlag bool) int
 
 	ip := -(float64(pv)*n*rate + float64(pmt)*m)
 	if !paymentFlag {
-		return round(ip)
+		return ip
 	}
-	return round(ip / (1.0 + rate))
+	return ip / (1.0 + rate)
+}
+
+func Ipmt(rate float64, per int, nper int, pv int, fv int, paymentFlag bool) int {
+	return round(IpmtFloat64(rate, per, nper, pv, fv, paymentFlag))
 }
 
 func Fv(rate float64, nper int, pmt int, pv int, paymentFlag bool) int {

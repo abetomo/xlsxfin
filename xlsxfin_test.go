@@ -191,6 +191,124 @@ func TestPmt(t *testing.T) {
 	})
 }
 
+func TestIpmtFloat64(t *testing.T) {
+	type testArgs struct {
+		rate        float64
+		per         int
+		nper        int
+		pv          int
+		fv          int
+		paymentFlag bool
+	}
+
+	type testData struct {
+		args     testArgs
+		expected float64
+	}
+
+	t.Run("nper is 0", func(t *testing.T) {
+		actual := IpmtFloat64(0.3, 3, 0, 100_000, 0, false)
+		expected := 0.0
+		if !checkForRoundingError(actual, expected) {
+			t.Fatalf("got: %f\nwant: %f\n", actual, expected)
+		}
+	})
+
+	t.Run("per is 0", func(t *testing.T) {
+		actual := IpmtFloat64(0.3, 0, 36, 100_000, 0, false)
+		expected := 0.0
+		if !checkForRoundingError(actual, expected) {
+			t.Fatalf("got: %f\nwant: %f\n", actual, expected)
+		}
+	})
+
+	t.Run("rate is 0", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.0, 24, 36, 100_000, 0, false},
+				expected: 0.0,
+			},
+			{
+				args:     testArgs{0.0, 24, 36, 100_000, 0, true},
+				expected: 0.0,
+			},
+			{
+				args:     testArgs{0.0, 24, 36, 100_000, 1_000, false},
+				expected: 0.0,
+			},
+			{
+				args:     testArgs{0.0, 24, 36, 100_000, 1_000, true},
+				expected: 0.0,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := IpmtFloat64(
+				args.rate,
+				args.per,
+				args.nper,
+				args.pv,
+				args.fv,
+				args.paymentFlag,
+			)
+			if !checkForRoundingError(actual, testCase.expected) {
+				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
+			}
+		}
+	})
+
+	t.Run("rate > 0", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.1, 2, 36, 800_000, 0, false},
+				expected: -79_732.554895,
+			},
+			{
+				args:     testArgs{0.6, 2, 36, 800_000, 0, false},
+				expected: -479_999.987086,
+			},
+			{
+				args:     testArgs{0.1, 2, 36, 800_000, 0, true},
+				expected: -72_484.140813,
+			},
+			{
+				args:     testArgs{0.6, 2, 36, 800_000, 0, true},
+				expected: -299_999.991929,
+			},
+			{
+				args:     testArgs{0.1, 2, 36, 800_000, 1_000, false},
+				expected: -79_732.220588,
+			},
+			{
+				args:     testArgs{0.6, 2, 36, 800_000, 1_000, false},
+				expected: -479_999.987069,
+			},
+			{
+				args:     testArgs{0.1, 2, 36, 800_000, 1_000, true},
+				expected: -72_483.836898,
+			},
+			{
+				args:     testArgs{0.6, 2, 36, 800_000, 1_000, true},
+				expected: -299_999.991918,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := IpmtFloat64(
+				args.rate,
+				args.per,
+				args.nper,
+				args.pv,
+				args.fv,
+				args.paymentFlag,
+			)
+			if !checkForRoundingError(actual, testCase.expected) {
+				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
+			}
+		}
+	})
+}
+
 func TestIpmt(t *testing.T) {
 	type testArgs struct {
 		rate        float64
