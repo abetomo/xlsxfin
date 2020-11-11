@@ -222,6 +222,41 @@ func TestIpmtFloat64(t *testing.T) {
 		}
 	})
 
+	t.Run("rate < 0", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{-1.0, 24, 36, 100_000, 0, false},
+				expected: 0.0,
+			},
+			{
+				args:     testArgs{-1.0, 24, 36, 100_000, 0, true},
+				expected: 0.0,
+			},
+			{
+				args:     testArgs{-1.0, 24, 36, 100_000, 1_000, false},
+				expected: 0.0,
+			},
+			{
+				args:     testArgs{-1.0, 24, 36, 100_000, 1_000, true},
+				expected: 0.0,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := IpmtFloat64(
+				args.rate,
+				args.per,
+				args.nper,
+				args.pv,
+				args.fv,
+				args.paymentFlag,
+			)
+			if !checkForRoundingError(actual, testCase.expected) {
+				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
+			}
+		}
+	})
+
 	t.Run("rate is 0", func(t *testing.T) {
 		testCases := []testData{
 			{

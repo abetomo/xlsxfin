@@ -36,6 +36,10 @@ func IpmtFloat64(rate float64, per int, nper int, pv int, fv int, paymentFlag bo
 		return 0.0
 	}
 
+	if rate < 0 {
+		return 0.0
+	}
+
 	pmt := PmtFloat64(rate, nper, pv, fv, false)
 	perSub1Float64 := float64(per - 1)
 
@@ -46,12 +50,7 @@ func IpmtFloat64(rate float64, per int, nper int, pv int, fv int, paymentFlag bo
 		n = math.Exp(perSub1Float64 * math.Log(1.0+float64(rate)))
 	}
 
-	m := 0.0
-	if rate <= -1 {
-		m = math.Pow(1.0+rate, perSub1Float64) - 1
-	} else {
-		m = math.Exp(perSub1Float64*math.Log(1.0+float64(rate))) - 1
-	}
+	m := math.Exp(perSub1Float64*math.Log(1.0+float64(rate))) - 1
 
 	ip := -(float64(pv)*n*rate + float64(pmt)*m)
 	if !paymentFlag {
