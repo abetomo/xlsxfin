@@ -87,3 +87,31 @@ func Ppmt(rate float64, per int, nper int, pv int, fv int, paymentFlag bool) int
 	ipmt := IpmtFloat64(rate, per, nper, pv, fv, paymentFlag)
 	return round(pmt - ipmt)
 }
+
+func CumipmtFloat64(rate float64, nper int, pv int, start int, end int, paymentFlag bool) float64 {
+	if rate <= 0.0 || nper <= 0 || pv <= 0 {
+		return 0.0
+	}
+
+	if start < 1 || end < 1 || start > end {
+		return 0.0
+	}
+
+	pmtFloat64 := PmtFloat64(rate, nper, pv, 0, paymentFlag)
+	pmt := round(pmtFloat64)
+	interest := 0.0
+	if start == 1 {
+		if !paymentFlag {
+			interest = -float64(pv)
+			start++
+		}
+	}
+	for i := start; i <= end; i++ {
+		if paymentFlag {
+			interest += FvFloat64(rate, i-2, pmt, pv, true) - pmtFloat64
+		} else {
+			interest += FvFloat64(rate, i-1, pmt, pv, false)
+		}
+	}
+	return interest * rate
+}
