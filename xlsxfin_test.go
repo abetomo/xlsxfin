@@ -733,7 +733,7 @@ func TestPpmt(t *testing.T) {
 	})
 }
 
-func TestCumipmt(t *testing.T) {
+func TestCumipmtFloat64(t *testing.T) {
 	type testArgs struct {
 		rate        float64
 		nper        int
@@ -891,6 +891,169 @@ func TestCumipmt(t *testing.T) {
 			)
 			if !checkForRoundingError(actual, testCase.expected) {
 				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
+			}
+		}
+	})
+}
+
+func TestCumipmt(t *testing.T) {
+	type testArgs struct {
+		rate        float64
+		nper        int
+		pv          int
+		start       int
+		end         int
+		paymentFlag bool
+	}
+
+	type testData struct {
+		args     testArgs
+		expected int
+	}
+
+	t.Run("rate <= 0.0", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0, 36, 800_000, 6, 12, false},
+				expected: 0,
+			},
+			{
+				args:     testArgs{-1, -1, 10, 800_000, 0, false},
+				expected: 0,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := Cumipmt(
+				args.rate,
+				args.nper,
+				args.pv,
+				args.start,
+				args.end,
+				args.paymentFlag,
+			)
+			if actual != testCase.expected {
+				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
+			}
+		}
+	})
+
+	t.Run("nper <= 0.0", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.1, 0, 800_000, 6, 12, false},
+				expected: 0,
+			},
+			{
+				args:     testArgs{0.1, -1, 800_000, 6, 12, false},
+				expected: 0,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := Cumipmt(
+				args.rate,
+				args.nper,
+				args.pv,
+				args.start,
+				args.end,
+				args.paymentFlag,
+			)
+			if actual != testCase.expected {
+				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
+			}
+		}
+	})
+
+	t.Run("pv <= 0.0", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.1, 36, 0, 6, 12, false},
+				expected: 0,
+			},
+			{
+				args:     testArgs{0.1, 36, -1, 6, 12, false},
+				expected: 0,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := Cumipmt(
+				args.rate,
+				args.nper,
+				args.pv,
+				args.start,
+				args.end,
+				args.paymentFlag,
+			)
+			if actual != testCase.expected {
+				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
+			}
+		}
+	})
+
+	t.Run("start < 1 || end < 1 || start > end", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.1, 36, 800_000, 0, 12, false},
+				expected: 0,
+			},
+			{
+				args:     testArgs{0.1, 36, 800_000, 1, 0, false},
+				expected: 0,
+			},
+			{
+				args:     testArgs{0.1, 36, 800_000, 10, 9, false},
+				expected: 0,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := Cumipmt(
+				args.rate,
+				args.nper,
+				args.pv,
+				args.start,
+				args.end,
+				args.paymentFlag,
+			)
+			if actual != testCase.expected {
+				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
+			}
+		}
+	})
+
+	t.Run("Calculate", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.1, 36, 800_000, 6, 12, true},
+				expected: -488_958,
+			},
+			{
+				args:     testArgs{0.1, 36, 800_000, 6, 12, false},
+				expected: -537_861,
+			},
+			{
+				args:     testArgs{0.1, 36, 800_000, 1, 12, true},
+				expected: -849_908,
+			},
+			{
+				args:     testArgs{0.1, 36, 800_000, 1, 12, false},
+				expected: -934_906,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := Cumipmt(
+				args.rate,
+				args.nper,
+				args.pv,
+				args.start,
+				args.end,
+				args.paymentFlag,
+			)
+			if actual != testCase.expected {
+				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
 			}
 		}
 	})

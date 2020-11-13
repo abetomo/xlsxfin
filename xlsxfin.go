@@ -114,3 +114,7 @@ func CumipmtFloat64(rate float64, nper int, pv int, start int, end int, paymentF
 	}
 	return interest * rate
 }
+
+func Cumipmt(rate float64, nper int, pv int, start int, end int, paymentFlag bool) int {
+	return round(CumipmtFloat64(rate, nper, pv, start, end, paymentFlag))
+}
