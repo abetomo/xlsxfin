@@ -34,7 +34,7 @@ func Ipmt(rate float64, per int, nper int, pv int, fv int, paymentFlag bool) int
 ## [FV](https://support.microsoft.com/en-us/office/fv-function-2eef9f44-a084-4c61-bdd8-4fe4bb1b71b3)
 
 ```go
-func Fv(rate float64, nper int, pmt int, pv int, paymentFlag bool) int
+func Fv(rate float64, nper int, pmt float64, pv int, paymentFlag bool) int
 ```
 
 ## [PPMT](https://support.microsoft.com/en-us/office/ppmt-function-c370d9e3-7749-4ca4-beea-b06c6ac95e1b)
