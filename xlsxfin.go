@@ -63,18 +63,20 @@ func Ipmt(rate float64, per int, nper int, pv int, fv int, paymentFlag bool) int
 	return round(IpmtFloat64(rate, per, nper, pv, fv, paymentFlag))
 }
 
-func FvFloat64(rate float64, nper int, pmt int, pv int, paymentFlag bool) float64 {
+func FvFloat64(rate float64, nper int, pmt float64, pv int, paymentFlag bool) float64 {
+	pvFloat64 := float64(pv)
+	nperFloat64 := float64(nper)
 	if rate == 0 {
-		return float64(-1 * (pv + pmt*nper))
+		return -(pvFloat64 + pmt*nperFloat64)
 	}
-	term := math.Pow(1.0+rate, float64(nper))
+	term := math.Pow(1.0+rate, nperFloat64)
 	if paymentFlag {
-		return -(float64(pv)*term + (float64(pmt)*(1+rate)*(term-1))/rate)
+		return -(pvFloat64*term + (pmt*(1+rate)*(term-1))/rate)
 	}
-	return -(float64(pv)*term + (float64(pmt)*(term-1))/rate)
+	return -(pvFloat64*term + (pmt*(term-1))/rate)
 }
 
-func Fv(rate float64, nper int, pmt int, pv int, paymentFlag bool) int {
+func Fv(rate float64, nper int, pmt float64, pv int, paymentFlag bool) int {
 	return round(FvFloat64(rate, nper, pmt, pv, paymentFlag))
 }
 
@@ -96,8 +98,7 @@ func CumipmtFloat64(rate float64, nper int, pv int, start int, end int, paymentF
 		return 0.0
 	}
 
-	pmtFloat64 := PmtFloat64(rate, nper, pv, 0, paymentFlag)
-	pmt := round(pmtFloat64)
+	pmt := PmtFloat64(rate, nper, pv, 0, paymentFlag)
 	interest := 0.0
 	if start == 1 {
 		if !paymentFlag {
@@ -107,7 +108,7 @@ func CumipmtFloat64(rate float64, nper int, pv int, start int, end int, paymentF
 	}
 	for i := start; i <= end; i++ {
 		if paymentFlag {
-			interest += FvFloat64(rate, i-2, pmt, pv, true) - pmtFloat64
+			interest += FvFloat64(rate, i-2, pmt, pv, true) - pmt
 		} else {
 			interest += FvFloat64(rate, i-1, pmt, pv, false)
 		}

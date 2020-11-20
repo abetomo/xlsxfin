@@ -466,7 +466,7 @@ func TestFvFloat64(t *testing.T) {
 	type testArgs struct {
 		rate        float64
 		nper        int
-		pmt         int
+		pmt         float64
 		pv          int
 		paymentFlag bool
 	}
@@ -479,19 +479,19 @@ func TestFvFloat64(t *testing.T) {
 	t.Run("rate is 0", func(t *testing.T) {
 		testCases := []testData{
 			{
-				args:     testArgs{0.0, 12, 10_000, 0, false},
+				args:     testArgs{0.0, 12, 10_000.0, 0, false},
 				expected: -120_000.0,
 			},
 			{
-				args:     testArgs{0.0, 12, 10_000, 1_000, false},
+				args:     testArgs{0.0, 12, 10_000.0, 1_000, false},
 				expected: -121_000.0,
 			},
 			{
-				args:     testArgs{0.0, 12, 10_000, 0, true},
+				args:     testArgs{0.0, 12, 10_000.0, 0, true},
 				expected: -120_000.0,
 			},
 			{
-				args:     testArgs{0.0, 12, 10_000, 1_000, true},
+				args:     testArgs{0.0, 12, 10_000.0, 1_000, true},
 				expected: -121_000.0,
 			},
 		}
@@ -513,19 +513,19 @@ func TestFvFloat64(t *testing.T) {
 	t.Run("rate > 0", func(t *testing.T) {
 		testCases := []testData{
 			{
-				args:     testArgs{0.1, 12, 10_000, 0, false},
+				args:     testArgs{0.1, 12, 10_000.0, 0, false},
 				expected: -213_842.837672,
 			},
 			{
-				args:     testArgs{0.1, 12, 10_000, 1_000, false},
+				args:     testArgs{0.1, 12, 10_000.0, 1_000, false},
 				expected: -216_981.266049,
 			},
 			{
-				args:     testArgs{0.1, 12, 10_000, 0, true},
+				args:     testArgs{0.1, 12, 10_000.0, 0, true},
 				expected: -235_227.121439,
 			},
 			{
-				args:     testArgs{0.1, 12, 10_000, 1_000, true},
+				args:     testArgs{0.1, 12, 10_000.0, 1_000, true},
 				expected: -238365.549816,
 			},
 		}
@@ -549,7 +549,7 @@ func TestFv(t *testing.T) {
 	type testArgs struct {
 		rate        float64
 		nper        int
-		pmt         int
+		pmt         float64
 		pv          int
 		paymentFlag bool
 	}
@@ -562,19 +562,19 @@ func TestFv(t *testing.T) {
 	t.Run("rate is 0", func(t *testing.T) {
 		testCases := []testData{
 			{
-				args:     testArgs{0.0, 12, 10_000, 0, false},
+				args:     testArgs{0.0, 12, 10_000.0, 0, false},
 				expected: -120_000,
 			},
 			{
-				args:     testArgs{0.0, 12, 10_000, 1_000, false},
+				args:     testArgs{0.0, 12, 10_000.0, 1_000, false},
 				expected: -121_000,
 			},
 			{
-				args:     testArgs{0.0, 12, 10_000, 0, true},
+				args:     testArgs{0.0, 12, 10_000.0, 0, true},
 				expected: -120_000,
 			},
 			{
-				args:     testArgs{0.0, 12, 10_000, 1_000, true},
+				args:     testArgs{0.0, 12, 10_000.0, 1_000, true},
 				expected: -121_000,
 			},
 		}
@@ -596,19 +596,19 @@ func TestFv(t *testing.T) {
 	t.Run("rate > 0", func(t *testing.T) {
 		testCases := []testData{
 			{
-				args:     testArgs{0.1, 12, 10_000, 0, false},
+				args:     testArgs{0.1, 12, 10_000.0, 0, false},
 				expected: -213_843,
 			},
 			{
-				args:     testArgs{0.1, 12, 10_000, 1_000, false},
+				args:     testArgs{0.1, 12, 10_000.0, 1_000, false},
 				expected: -216_981,
 			},
 			{
-				args:     testArgs{0.1, 12, 10_000, 0, true},
+				args:     testArgs{0.1, 12, 10_000.0, 0, true},
 				expected: -235_227,
 			},
 			{
-				args:     testArgs{0.1, 12, 10_000, 1_000, true},
+				args:     testArgs{0.1, 12, 10_000.0, 1_000, true},
 				expected: -238_366,
 			},
 		}
@@ -864,19 +864,19 @@ func TestCumipmtFloat64(t *testing.T) {
 		testCases := []testData{
 			{
 				args:     testArgs{0.1, 36, 800_000, 6, 12, true},
-				expected: -488_958.477821,
+				expected: -488_961.571129,
 			},
 			{
 				args:     testArgs{0.1, 36, 800_000, 6, 12, false},
-				expected: -537_861.462606,
+				expected: -537_857.728242,
 			},
 			{
 				args:     testArgs{0.1, 36, 800_000, 1, 12, true},
-				expected: -849_907.743714,
+				expected: -849_911.083983,
 			},
 			{
 				args:     testArgs{0.1, 36, 800_000, 1, 12, false},
-				expected: -934_906.425206,
+				expected: -934_902.192381,
 			},
 		}
 		for _, testCase := range testCases {
@@ -1027,19 +1027,19 @@ func TestCumipmt(t *testing.T) {
 		testCases := []testData{
 			{
 				args:     testArgs{0.1, 36, 800_000, 6, 12, true},
-				expected: -488_958,
+				expected: -488_962,
 			},
 			{
 				args:     testArgs{0.1, 36, 800_000, 6, 12, false},
-				expected: -537_861,
+				expected: -537_858,
 			},
 			{
 				args:     testArgs{0.1, 36, 800_000, 1, 12, true},
-				expected: -849_908,
+				expected: -849_911,
 			},
 			{
 				args:     testArgs{0.1, 36, 800_000, 1, 12, false},
-				expected: -934_906,
+				expected: -934_902,
 			},
 		}
 		for _, testCase := range testCases {
