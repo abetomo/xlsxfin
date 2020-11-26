@@ -80,13 +80,17 @@ func Fv(rate float64, nper int, pmt float64, pv int, paymentFlag bool) int {
 	return round(FvFloat64(rate, nper, pmt, pv, paymentFlag))
 }
 
-func Ppmt(rate float64, per int, nper int, pv int, fv int, paymentFlag bool) int {
+func PpmtFloat64(rate float64, per int, nper int, pv int, fv int, paymentFlag bool) float64 {
 	if per < 1 || per >= nper+1 {
 		return 0
 	}
 	pmt := PmtFloat64(rate, nper, pv, fv, paymentFlag)
 	ipmt := IpmtFloat64(rate, per, nper, pv, fv, paymentFlag)
-	return round(pmt - ipmt)
+	return pmt - ipmt
+}
+
+func Ppmt(rate float64, per int, nper int, pv int, fv int, paymentFlag bool) int {
+	return round(PpmtFloat64(rate, per, nper, pv, fv, paymentFlag))
 }
 
 func CumipmtFloat64(rate float64, nper int, pv int, start int, end int, paymentFlag bool) float64 {

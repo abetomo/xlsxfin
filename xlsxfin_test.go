@@ -628,6 +628,111 @@ func TestFv(t *testing.T) {
 	})
 }
 
+func TestPpmtFloat64(t *testing.T) {
+	type testArgs struct {
+		rate        float64
+		per         int
+		nper        int
+		pv          int
+		fv          int
+		paymentFlag bool
+	}
+
+	type testData struct {
+		args     testArgs
+		expected float64
+	}
+
+	t.Run("per < 1", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.1, 0, 10, 800_000, 0, false},
+				expected: 0.0,
+			},
+			{
+				args:     testArgs{0.1, -1, 10, 800_000, 0, false},
+				expected: 0.0,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := PpmtFloat64(
+				args.rate,
+				args.per,
+				args.nper,
+				args.pv,
+				args.fv,
+				args.paymentFlag,
+			)
+			if actual != testCase.expected {
+				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
+			}
+		}
+	})
+
+	t.Run("per >= nper + 1", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.1, 11, 10, 800_000, 0, false},
+				expected: 0.0,
+			},
+			{
+				args:     testArgs{0.1, 15, 10, 800_000, 0, false},
+				expected: 0.0,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := PpmtFloat64(
+				args.rate,
+				args.per,
+				args.nper,
+				args.pv,
+				args.fv,
+				args.paymentFlag,
+			)
+			if actual != testCase.expected {
+				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
+			}
+		}
+	})
+
+	t.Run("per >= 1 && per < nper + 1", func(t *testing.T) {
+		testCases := []testData{
+			{
+				args:     testArgs{0.1, 12, 36, 800_000, 0, false},
+				expected: -7_630.520984,
+			},
+			{
+				args:     testArgs{0.1, 12, 36, 800_000, 1_000, false},
+				expected: -7_640.059135,
+			},
+			{
+				args:     testArgs{0.1, 12, 36, 800_000, 0, true},
+				expected: -6_936.837258,
+			},
+			{
+				args:     testArgs{0.1, 12, 36, 800_000, 1_000, true},
+				expected: -6_945.508305,
+			},
+		}
+		for _, testCase := range testCases {
+			args := testCase.args
+			actual := PpmtFloat64(
+				args.rate,
+				args.per,
+				args.nper,
+				args.pv,
+				args.fv,
+				args.paymentFlag,
+			)
+			if !checkForRoundingError(actual, testCase.expected) {
+				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
+			}
+		}
+	})
+}
+
 func TestPpmt(t *testing.T) {
 	type testArgs struct {
 		rate        float64
