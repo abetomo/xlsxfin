@@ -1,12 +1,19 @@
 package xlsxfin
 
 import (
+	"fmt"
 	"math"
 	"testing"
 )
 
 func checkForRoundingError(actual float64, expected float64) bool {
 	return math.Abs(actual-expected) < 0.0001
+}
+
+func ExamplePmtFloat64() {
+	v := PmtFloat64(0.3, 36, 100_000, 0, false)
+	fmt.Println(v)
+	// Output:-30002.37243823623
 }
 
 func TestPmtFloat64(t *testing.T) {
@@ -100,6 +107,12 @@ func TestPmtFloat64(t *testing.T) {
 	})
 }
 
+func ExamplePmt() {
+	v := Pmt(0.3, 36, 100_000, 0, false)
+	fmt.Println(v)
+	// Output:-30002
+}
+
 func TestPmt(t *testing.T) {
 	type testArgs struct {
 		rate        float64
@@ -189,6 +202,12 @@ func TestPmt(t *testing.T) {
 			}
 		}
 	})
+}
+
+func ExampleIpmtFloat64() {
+	v := IpmtFloat64(0.1, 2, 36, 800_000, 0, false)
+	fmt.Println(v)
+	// Output: -79732.55489453014
 }
 
 func TestIpmtFloat64(t *testing.T) {
@@ -344,6 +363,12 @@ func TestIpmtFloat64(t *testing.T) {
 	})
 }
 
+func ExampleIpmt() {
+	v := Ipmt(0.1, 2, 36, 800_000, 0, false)
+	fmt.Println(v)
+	// Output: -79733
+}
+
 func TestIpmt(t *testing.T) {
 	type testArgs struct {
 		rate        float64
@@ -462,6 +487,12 @@ func TestIpmt(t *testing.T) {
 	})
 }
 
+func ExampleFvFloat64() {
+	v := FvFloat64(0.1, 12, 10_000.0, 0, false)
+	fmt.Println(v)
+	// Output: -213842.83767210023
+}
+
 func TestFvFloat64(t *testing.T) {
 	type testArgs struct {
 		rate        float64
@@ -545,6 +576,12 @@ func TestFvFloat64(t *testing.T) {
 	})
 }
 
+func ExampleFv() {
+	v := Fv(0.1, 12, 10_000.0, 0, false)
+	fmt.Println(v)
+	// Output: -213843
+}
+
 func TestFv(t *testing.T) {
 	type testArgs struct {
 		rate        float64
@@ -626,6 +663,12 @@ func TestFv(t *testing.T) {
 			}
 		}
 	})
+}
+
+func ExamplePpmtFloat64() {
+	v := PpmtFloat64(0.1, 12, 36, 800_000, 0, false)
+	fmt.Printf("%.5f\n", v)
+	// Output: -7630.52098
 }
 
 func TestPpmtFloat64(t *testing.T) {
@@ -733,6 +776,12 @@ func TestPpmtFloat64(t *testing.T) {
 	})
 }
 
+func ExamplePpmt() {
+	v := Ppmt(0.1, 12, 36, 800_000, 0, false)
+	fmt.Println(v)
+	// Output: -7631
+}
+
 func TestPpmt(t *testing.T) {
 	type testArgs struct {
 		rate        float64
@@ -836,6 +885,12 @@ func TestPpmt(t *testing.T) {
 			}
 		}
 	})
+}
+
+func ExampleCumipmtFloat64() {
+	v := CumipmtFloat64(0.1, 36, 800_000, 6, 12, true)
+	fmt.Println(v)
+	// Output: -488961.5711288557
 }
 
 func TestCumipmtFloat64(t *testing.T) {
@@ -999,6 +1054,12 @@ func TestCumipmtFloat64(t *testing.T) {
 			}
 		}
 	})
+}
+
+func ExampleCumipmt() {
+	v := Cumipmt(0.1, 36, 800_000, 6, 12, true)
+	fmt.Println(v)
+	// Output: -488962
 }
 
 func TestCumipmt(t *testing.T) {
