@@ -12,9 +12,8 @@ import (
 
 func main() {
 	fmt.Println(xlsxfin.Pmt(0.08/12, 10, 1_000_000, 0, false))
+	// Output:-103703
 }
-
-// -103703
 ```
 
 ## Functions
