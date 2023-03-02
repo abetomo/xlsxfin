@@ -1032,7 +1032,7 @@ func TestCumipmtFloat64(t *testing.T) {
 			},
 			{
 				args:     testArgs{0.1, 36, 800_000, 1, 12, true},
-				expected: -849_911.083983,
+				expected: -777_183.8112556307,
 			},
 			{
 				args:     testArgs{0.1, 36, 800_000, 1, 12, false},
@@ -1201,7 +1201,7 @@ func TestCumipmt(t *testing.T) {
 			},
 			{
 				args:     testArgs{0.1, 36, 800_000, 1, 12, true},
-				expected: -849_911,
+				expected: -777_184,
 			},
 			{
 				args:     testArgs{0.1, 36, 800_000, 1, 12, false},

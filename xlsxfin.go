@@ -107,8 +107,8 @@ func CumipmtFloat64(rate float64, nper int, pv int, start int, end int, paymentF
 	if start == 1 {
 		if !paymentFlag {
 			interest = -float64(pv)
-			start++
 		}
+		start++
 	}
 	for i := start; i <= end; i++ {
 		if paymentFlag {
