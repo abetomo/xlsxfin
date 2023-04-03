@@ -2,13 +2,12 @@ package xlsxfin
 
 import (
 	"fmt"
-	"math"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func checkForRoundingError(actual float64, expected float64) bool {
-	return math.Abs(actual-expected) < 0.0001
-}
+const DELTA = 0.0001
 
 func ExamplePmtFloat64() {
 	v := PmtFloat64(0.3, 36, 100_000, 0, false)
@@ -33,9 +32,7 @@ func TestPmtFloat64(t *testing.T) {
 	t.Run("nper is 0", func(t *testing.T) {
 		actual := PmtFloat64(0.3, 0, 100_000, 0, false)
 		expected := 0.0
-		if !checkForRoundingError(actual, expected) {
-			t.Fatalf("got: %f\nwant: %f\n", actual, expected)
-		}
+		assert.InDelta(t, expected, actual, DELTA)
 	})
 
 	t.Run("rate is 0", func(t *testing.T) {
@@ -66,9 +63,7 @@ func TestPmtFloat64(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if !checkForRoundingError(actual, testCase.expected) {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.InDelta(t, testCase.expected, actual, DELTA, testCase)
 		}
 	})
 
@@ -100,9 +95,7 @@ func TestPmtFloat64(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if !checkForRoundingError(actual, testCase.expected) {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.InDelta(t, testCase.expected, actual, DELTA, testCase)
 		}
 	})
 }
@@ -130,9 +123,7 @@ func TestPmt(t *testing.T) {
 	t.Run("nper is 0", func(t *testing.T) {
 		actual := Pmt(0.3, 0, 100_000, 0, false)
 		expected := 0
-		if actual != expected {
-			t.Fatalf("got: %d\nwant: %d\n", actual, expected)
-		}
+		assert.Equal(t, expected, actual)
 	})
 
 	t.Run("rate is 0", func(t *testing.T) {
@@ -163,9 +154,7 @@ func TestPmt(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual)
 		}
 	})
 
@@ -197,9 +186,7 @@ func TestPmt(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual)
 		}
 	})
 }
@@ -228,17 +215,13 @@ func TestIpmtFloat64(t *testing.T) {
 	t.Run("nper is 0", func(t *testing.T) {
 		actual := IpmtFloat64(0.3, 3, 0, 100_000, 0, false)
 		expected := 0.0
-		if !checkForRoundingError(actual, expected) {
-			t.Fatalf("got: %f\nwant: %f\n", actual, expected)
-		}
+		assert.InDelta(t, expected, actual, DELTA)
 	})
 
 	t.Run("per is 0", func(t *testing.T) {
 		actual := IpmtFloat64(0.3, 0, 36, 100_000, 0, false)
 		expected := 0.0
-		if !checkForRoundingError(actual, expected) {
-			t.Fatalf("got: %f\nwant: %f\n", actual, expected)
-		}
+		assert.InDelta(t, expected, actual, DELTA)
 	})
 
 	t.Run("rate < 0", func(t *testing.T) {
@@ -270,9 +253,7 @@ func TestIpmtFloat64(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if !checkForRoundingError(actual, testCase.expected) {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.InDelta(t, testCase.expected, actual, DELTA, testCase)
 		}
 	})
 
@@ -305,9 +286,7 @@ func TestIpmtFloat64(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if !checkForRoundingError(actual, testCase.expected) {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.InDelta(t, testCase.expected, actual, DELTA, testCase)
 		}
 	})
 
@@ -356,9 +335,7 @@ func TestIpmtFloat64(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if !checkForRoundingError(actual, testCase.expected) {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.InDelta(t, testCase.expected, actual, DELTA, testCase)
 		}
 	})
 }
@@ -387,17 +364,13 @@ func TestIpmt(t *testing.T) {
 	t.Run("nper is 0", func(t *testing.T) {
 		actual := Ipmt(0.3, 3, 0, 100_000, 0, false)
 		expected := 0
-		if actual != expected {
-			t.Fatalf("got: %d\nwant: %d\n", actual, expected)
-		}
+		assert.Equal(t, expected, actual)
 	})
 
 	t.Run("per is 0", func(t *testing.T) {
 		actual := Ipmt(0.3, 0, 36, 100_000, 0, false)
 		expected := 0
-		if actual != expected {
-			t.Fatalf("got: %d\nwant: %d\n", actual, expected)
-		}
+		assert.Equal(t, expected, actual)
 	})
 
 	t.Run("rate is 0", func(t *testing.T) {
@@ -429,9 +402,7 @@ func TestIpmt(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -480,9 +451,7 @@ func TestIpmt(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 }
@@ -535,9 +504,7 @@ func TestFvFloat64(t *testing.T) {
 				args.pv,
 				args.paymentFlag,
 			)
-			if !checkForRoundingError(actual, testCase.expected) {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.InDelta(t, testCase.expected, actual, DELTA, testCase)
 		}
 	})
 
@@ -569,9 +536,7 @@ func TestFvFloat64(t *testing.T) {
 				args.pv,
 				args.paymentFlag,
 			)
-			if !checkForRoundingError(actual, testCase.expected) {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.InDelta(t, testCase.expected, actual, DELTA, testCase)
 		}
 	})
 }
@@ -624,9 +589,7 @@ func TestFv(t *testing.T) {
 				args.pv,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -658,9 +621,7 @@ func TestFv(t *testing.T) {
 				args.pv,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 }
@@ -707,9 +668,7 @@ func TestPpmtFloat64(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -734,9 +693,7 @@ func TestPpmtFloat64(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -769,9 +726,7 @@ func TestPpmtFloat64(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if !checkForRoundingError(actual, testCase.expected) {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.InDelta(t, testCase.expected, actual, DELTA, testCase)
 		}
 	})
 }
@@ -818,9 +773,7 @@ func TestPpmt(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -845,9 +798,7 @@ func TestPpmt(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -880,9 +831,7 @@ func TestPpmt(t *testing.T) {
 				args.fv,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 }
@@ -929,9 +878,7 @@ func TestCumipmtFloat64(t *testing.T) {
 				args.end,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -956,9 +903,7 @@ func TestCumipmtFloat64(t *testing.T) {
 				args.end,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -983,9 +928,7 @@ func TestCumipmtFloat64(t *testing.T) {
 				args.end,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -1014,9 +957,7 @@ func TestCumipmtFloat64(t *testing.T) {
 				args.end,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -1049,9 +990,7 @@ func TestCumipmtFloat64(t *testing.T) {
 				args.end,
 				args.paymentFlag,
 			)
-			if !checkForRoundingError(actual, testCase.expected) {
-				t.Fatalf("testCase: %#v\ngot: %f\n", testCase, actual)
-			}
+			assert.InDelta(t, testCase.expected, actual, DELTA, testCase)
 		}
 	})
 }
@@ -1098,9 +1037,7 @@ func TestCumipmt(t *testing.T) {
 				args.end,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -1125,9 +1062,7 @@ func TestCumipmt(t *testing.T) {
 				args.end,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -1152,9 +1087,7 @@ func TestCumipmt(t *testing.T) {
 				args.end,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -1183,9 +1116,7 @@ func TestCumipmt(t *testing.T) {
 				args.end,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 
@@ -1218,9 +1149,7 @@ func TestCumipmt(t *testing.T) {
 				args.end,
 				args.paymentFlag,
 			)
-			if actual != testCase.expected {
-				t.Fatalf("testCase: %#v\ngot: %d\n", testCase, actual)
-			}
+			assert.Equal(t, testCase.expected, actual, testCase)
 		}
 	})
 }
